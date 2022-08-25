@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: authmc-deployment
+  labels:
+    app: Auth.API
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: Auth.API
+  template:
+    metadata:
+      labels:
+        app: Auth.API
+    spec:
+      containers:
+      - name: Auth.API
+        image: authregistry1.azurecr.io/conatinerregistry:latest
+        resources:
+        env:
+           - name: ConnectionString
+             value: "Server=tcp:userdetail2.database.windows.net,1433;Initial Catalog=UserDetails;Persist Security Info=False;User ID=userdetail2;Password=password@123;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+        ports:
+        - containerPort: 8080
+      imagePullSecrets:
+        - name: webapisvcsecret  
+---
+
+
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: authmcsvc
+spec:
+  type: LoadBalancer
+  selector:
+    app: Auth.API
+  ports:
+  - port: 80
+  selector:
+       app: Auth.API
