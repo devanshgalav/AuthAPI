@@ -1,9 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: authmc-deployment
-  labels:
-    app: Auth.API
+  name: pensionauthorizationapi-deployment
 spec:
   replicas: 1
   selector:
@@ -15,30 +13,23 @@ spec:
         app: Auth.API
     spec:
       containers:
-      - name: Auth.API
-        image: authregistry1.azurecr.io/conatinerregistry:latest
-        resources:
-        env:
-           - name: ConnectionString
-             value: "Server=tcp:userdetail2.database.windows.net,1433;Initial Catalog=UserDetails;Persist Security Info=False;User ID=userdetail2;Password=password@123;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+      - name: pensionauthorizationrepos
+        image:  authregistry1.azurecr.io/conatinerregistry:latest
         ports:
         - containerPort: 8080
       imagePullSecrets:
-        - name: webapisvcsecret  
+      - name: webapisvcsecret  
+
+
+
 ---
-
-
-
-
 apiVersion: v1
 kind: Service
 metadata:
-  name: authmcsvc
+  name: pensionauthorizationapi
 spec:
   type: LoadBalancer
-  selector:
-    app: Auth.API
   ports:
   - port: 80
   selector:
-       app: Auth.API
+    app: Auth.API
